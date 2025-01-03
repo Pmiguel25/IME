@@ -1,0 +1,126 @@
+jeux/jeu-des-formes.html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeu des Formes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(4, 150px);
+      grid-gap: 20px;
+      text-align: center;
+    }
+    .shape {
+      width: 100px;
+      height: 100px;
+      margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #3498db;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .shape.dragging {
+      opacity: 0.5;
+    }
+    .shape.circle {
+      border-radius: 50%;
+    }
+    .shape.triangle {
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid #3498db;
+    }
+    .shape.rectangle {
+      width: 150px;
+    }
+    .drop-zone {
+      width: 100px;
+      height: 100px;
+      border: 2px dashed #2c3e50;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ecf0f1;
+    }
+    .drop-zone.correct {
+      background-color: #2ecc71;
+    }
+    .drop-zone.incorrect {
+      background-color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Shapes to Drag -->
+    <div class="shape circle" id="circle1" draggable="true"></div>
+    <div class="shape triangle" id="triangle1" draggable="true"></div>
+    <div class="shape rectangle" id="rectangle1" draggable="true"></div>
+    <div class="shape rectangle" id="rectangle2" draggable="true"></div>
+    <div class="shape circle" id="circle2" draggable="true"></div>
+    <div class="shape triangle" id="triangle2" draggable="true"></div>
+    <div class="shape rectangle" id="rectangle3" draggable="true"></div>
+    <div class="shape triangle" id="triangle3" draggable="true"></div>
+    <div class="shape circle" id="circle3" draggable="true"></div>
+    <div class="shape rectangle" id="rectangle4" draggable="true"></div>
+
+    <!-- Drop zones for matching shapes -->
+    <div class="drop-zone" id="dropCircle"></div>
+    <div class="drop-zone" id="dropTriangle"></div>
+    <div class="drop-zone" id="dropRectangle"></div>
+  </div>
+
+  <script>
+    // Drag and drop functionality
+    const shapes = document.querySelectorAll('.shape');
+    const dropZones = document.querySelectorAll('.drop-zone');
+
+    shapes.forEach(shape => {
+      shape.addEventListener('dragstart', (e) => {
+        shape.classList.add('dragging');
+      });
+
+      shape.addEventListener('dragend', () => {
+        shape.classList.remove('dragging');
+      });
+    });
+
+    dropZones.forEach(dropZone => {
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const draggedShape = document.querySelector('.shape.dragging');
+        if (dropZone === document.getElementById('dropCircle') && draggedShape.classList.contains('circle') ||
+            dropZone === document.getElementById('dropTriangle') && draggedShape.classList.contains('triangle') ||
+            dropZone === document.getElementById('dropRectangle') && draggedShape.classList.contains('rectangle')) {
+          draggedShape.style.transform = 'translate(0, 0)';
+          dropZone.classList.add('correct');
+          draggedShape.style.backgroundColor = '#2ecc71'; // Green
+        } else {
+          dropZone.classList.add('incorrect');
+          setTimeout(() => dropZone.classList.remove('incorrect'), 1000);
+        }
+      });
+    });
+  </script>
+  
+</body>
+</html>
